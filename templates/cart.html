@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Your Cart</h2>
+{% if products %}
+<table class="table table-bordered">
+  <thead><tr><th>Name</th><th>Price</th><th>Action</th></tr></thead>
+  <tbody>
+    {% for p in products %}
+    <tr>
+      <td>{{ p.name }}</td>
+      <td>${{ p.price }}</td>
+      <td><a href="{{ url_for('remove_from_cart', pid=p.id) }}" class="btn btn-danger btn-sm">Remove</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('place_order') }}" class="btn btn-success">Place Order</a>
+{% else %}
+<p>No items in cart.</p>
+{% endif %}
+{% endblock %}

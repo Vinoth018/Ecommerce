@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ category }}</h2>
+
+<form method="get" class="mb-3">
+  <input name="search" class="form-control" placeholder="Search {{ category }}" value="{{ request.args.get('search', '') }}">
+</form>
+
+<div class="row">
+  {% for product in products %}
+  <div class="col-md-4 mb-4">
+    <div class="card">
+      {% if product.image %}
+      <img src="{{ url_for('static', filename='product_images/' + product.image) }}" class="card-img-top" alt="{{ product.name }}">
+      {% else %}
+      <img src="{{ url_for('static', filename='no_image.png') }}" class="card-img-top" alt="No image">
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p class="card-text">₹ {{ product.price }}</p>
+        <a href="{{ url_for('product_detail', pid=product.id) }}" class="btn btn-primary">View</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

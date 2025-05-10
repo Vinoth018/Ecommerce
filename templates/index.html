@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="mb-4 text-center">Explore Categories</h1>
+<div class="row justify-content-center">
+  {% for cat in categories %}
+  <div class="col-md-2 mb-4">
+    <a href="{{ url_for('show_category', category=cat) }}" class="btn btn-primary w-100 p-3">
+      {{ cat }}
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

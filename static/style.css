@@ -1,0 +1,16 @@
+body {
+  background-color: #f8f9fa;
+}
+h1, h2 {
+  color: #343a40;
+}
+.card {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+.card:hover {
+  transform: scale(1.03);
+}
+.btn {
+  border-radius: 25px;
+}
