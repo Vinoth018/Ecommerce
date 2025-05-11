@@ -1,102 +1,3 @@
-# from flask import Flask, render_template, request, redirect, url_for, session
-
-# app = Flask(__name__)
-# app.secret_key = "supersecretkey"
-
-# # In-memory product storage
-# products = []
-# orders = []
-
-# # Categories
-# categories = ["Tshirt", "Shirt", "Pant", "Tracks", "Shorts"]
-
-# # Home page - category listing
-# @app.route('/')
-# def index():
-#     return render_template('index.html', categories=categories)
-
-# # Category page - list products
-# @app.route('/category/<category>')
-# def show_category(category):
-#     search = request.args.get('search', '').lower()
-#     filtered = [p for p in products if p['category'].lower() == category.lower()]
-#     if search:
-#         filtered = [p for p in filtered if search in p['name'].lower()]
-#     return render_template('category.html', category=category, products=filtered)
-
-# # Product detail
-# @app.route('/product/<int:pid>')
-# def product_detail(pid):
-#     product = next((p for p in products if p['id'] == pid), None)
-#     return render_template('product_detail.html', product=product)
-
-# # Admin panel
-# @app.route('/admin', methods=['GET', 'POST'])
-# def admin():
-#     if request.method == 'POST':
-#         new_id = len(products) + 1
-#         name = request.form['name']
-#         category = request.form['category']
-#         price = float(request.form['price'])
-#         stock = int(request.form['stock'])
-#         desc = request.form.get('description', '')
-#         products.append({
-#             'id': new_id,
-#             'name': name,
-#             'category': category,
-#             'price': price,
-#             'stock': stock,
-#             'description': desc
-#         })
-#     return render_template('admin.html', products=products, orders=orders)
-
-# # Delete product (admin)
-# @app.route('/admin/delete/<int:pid>')
-# def delete_product(pid):
-#     global products
-#     products = [p for p in products if p['id'] != pid]
-#     return redirect(url_for('admin'))
-
-# # View cart
-# @app.route('/cart')
-# def cart():
-#     cart_ids = session.get('cart', [])
-#     cart_items = [p for p in products if p['id'] in cart_ids]
-#     return render_template('cart.html', products=cart_items)
-
-# # Add to cart
-# @app.route('/cart/add/<int:pid>')
-# def add_to_cart(pid):
-#     cart = session.get('cart', [])
-#     if pid not in cart:
-#         cart.append(pid)
-#     session['cart'] = cart
-#     return redirect(url_for('cart'))
-
-# # Remove from cart
-# @app.route('/cart/remove/<int:pid>')
-# def remove_from_cart(pid):
-#     cart = session.get('cart', [])
-#     if pid in cart:
-#         cart.remove(pid)
-#     session['cart'] = cart
-#     return redirect(url_for('cart'))
-
-# # Place order
-# @app.route('/order')
-# def place_order():
-#     cart = session.get('cart', [])
-#     for pid in cart:
-#         orders.append({'product_id': pid})
-#     session['cart'] = []
-#     return "<h3>✅ Order placed successfully! <a href='/'>Go back</a></h3>"
-
-# # Run the app
-# if __name__ == '__main__':
-#     app.run(debug=True)
-
-
-
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
@@ -104,14 +5,13 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///products.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:0108@localhost:5432/Ecommerce'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/product_images'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 db = SQLAlchemy(app)
 
-# Define Product model
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -119,7 +19,8 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String(200))
-    image = db.Column(db.String(120), nullable=True)  # Store image filename
+    image = db.Column(db.String(120), nullable=True)
+
 
 # Create tables
 with app.app_context():
@@ -232,4 +133,3 @@ def place_order():
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
-
